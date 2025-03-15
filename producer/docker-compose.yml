@@ -1,0 +1,9 @@
+services:
+  producer:
+    build: .
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
