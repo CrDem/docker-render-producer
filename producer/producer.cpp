@@ -1,6 +1,7 @@
 #include <iostream>
 #include <array>
 #include <cstring>
+#include <stdlib.h>
 #include <amqp.h>
 #include <amqp_tcp_socket.h>
 
@@ -44,9 +45,8 @@ void send_to_rabbitmq(const std::array<char, sizeof(PathRenderContext)>& data) {
         std::cerr << "Failed to open socket\n";
         return;
     }
-ß
     // Авторизация и открытие канала
-    amqp_login(conn, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "vanek ti loh ili krutoy esli krutoy to vvedi svoi nick", "a takzhe password");
+    amqp_login(conn, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "bibaboba", "bimbimbambam");
     amqp_channel_open(conn, 1);
     amqp_get_rpc_reply(conn);
     
@@ -95,6 +95,9 @@ void send_to_rabbitmq(const std::array<char, sizeof(PathRenderContext)>& data) {
 }
 
 int main() {
+
+    srand(time(nullptr));
+
     PathRenderContext ctx = {
         {'a', 'b', '\0'},
         1920,
@@ -108,7 +111,16 @@ int main() {
     };
     
     std::array<char, sizeof(PathRenderContext)> buffer;
-    serialize(ctx, buffer);
-    send_to_rabbitmq(buffer);
+    for (int i = 0; i < 10; ++i)
+    {
+        char c = i +'0';
+        ctx.filename[2] = c;
+        ctx.light_col = {(double)(rand()%101) / 100, (double)(rand()%101) / 100, (double)(rand()%101) / 100};
+        ctx.absorption = (double)(rand()%81) / 80 + 0.05;
+        ctx.scattering = (double)(rand()%81) / 80 + 0.05;
+        ctx.g = (double)(rand()%81) / 80 + 0.05;
+        serialize(ctx, buffer);
+        send_to_rabbitmq(buffer);
+    }
     return 0;
 }
