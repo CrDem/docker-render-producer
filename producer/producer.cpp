@@ -110,7 +110,14 @@ int main() {
         0.3
     };
     
-    const int structureCount = std::getenv("STRUCTURE_COUNT");
+    const char* env_var = std::getenv("STRUCTURE_COUNT");
+    try {
+        const int structureCount = std::stoi(env_var);
+        std::cout << "structure count from env: " << structureCount << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "error: " << e.what() << std::endl;
+    }
+    
     std::array<char, sizeof(PathRenderContext)> buffer;
     for (int i = 0; i < structureCount; ++i)
     {
