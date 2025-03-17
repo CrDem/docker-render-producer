@@ -110,8 +110,9 @@ int main() {
         0.3
     };
     
+    const int structureCount = std::getenv("STRUCTURE_COUNT");
     std::array<char, sizeof(PathRenderContext)> buffer;
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < structureCount; ++i)
     {
         char c = i +'0';
         ctx.filename[2] = c;
